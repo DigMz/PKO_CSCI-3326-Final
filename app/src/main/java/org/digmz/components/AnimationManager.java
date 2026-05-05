@@ -14,10 +14,11 @@ public class AnimationManager extends Component {
   public AnimationManager(ArrayList<Animation> animations) {
     this.animations = animations;
     currAnimation = animations.get(0);
+    animation = 0;
   }
 
   public void play() {playing = true;}
-  public void stop() {}
+  public void stop() {playing = false;}
 
   @Override
   public void update(float dt) {
@@ -45,9 +46,22 @@ public class AnimationManager extends Component {
     return currAnimation.frameChanged;
   }
 
+  public int currentFrame() {
+    return currAnimation.frame;
+  }
+
   public void setAnimation(int index) {
     currAnimation = animations.get(index);
+    animation = index;
     playing = false;
+  }
+
+  public Animation getAnimation(int index) {
+    return animations.get(index);
+  }
+
+  public void resetCurrAnim() {
+    currAnimation.frame = 0;
   }
 
   public Sprite currentSprite() {
@@ -55,5 +69,8 @@ public class AnimationManager extends Component {
   }
 
   public Animation getCurrAnim() {return currAnimation;}
+  public int getCurrAnimIndex() {return animation;}
+
+  public boolean isPlaying() {return playing;}
 
 }

@@ -1,6 +1,7 @@
 package org.digmz.scenes;
 
 import org.digmz.game.Camera;
+import org.digmz.game.CharacterObject;
 import org.digmz.game.GameObject;
 import org.digmz.game.Transform;
 import org.digmz.game.Window;
@@ -11,6 +12,7 @@ import org.digmz.components.SpriteRenderer;
 import org.digmz.components.Spritesheet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.digmz.components.Animation;
 import org.digmz.components.AnimationManager;
@@ -25,7 +27,7 @@ import org.joml.Vector4f;
 
 public class LevelEditorScene extends Scene {
 
-  private GameObject obj1;
+  private CharacterObject player;
   private Spritesheet sprites;
   SpriteRenderer obj1Sprite;
 
@@ -52,41 +54,31 @@ public class LevelEditorScene extends Scene {
       return;
     }
 
-    // obj1 = new GameObject("Object 1", new Transform(new Vector2f(0, 0), new Vector2f(Window.getInitWidth(), Window.getInitHeight())), -1);
-    // obj1Sprite = new SpriteRenderer();
-    // obj1Sprite.setColor(new Vector4f(1,0,0,1));
-    // obj1.addComponent(obj1Sprite);
-    // this.addGameObjectToScene(obj1);
+    player = new CharacterObject(
+        "Player",
+        new Transform(new Vector2f(300, 100), new Vector2f(256, 256)),
+        1,
+        new SpriteRenderer(),
+        new AnimationManager(new ArrayList<Animation>(Arrays.asList(
+            new Animation(AssetPool.getSpriteSheet("assets/images/animations/hit-Sheet.png"), false),
+            new Animation(AssetPool.getSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png"), true)
+            ))),
+        new ArrayList<boolean[]>(Arrays.asList(
+            new boolean[]{false, false, true, false, false}
+            ))
+        );
 
-    obj1 = new GameObject("Object 2", new Transform(new Vector2f(300, 100), new Vector2f(256, 256)), 1);
-    SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
-    Spritesheet obj2sprites = AssetPool.getSpriteSheet("assets/images/spritesheet.png");
-    Animation anim = new Animation(obj2sprites);
-    Animation anim1 = new Animation(sprites);
-    ArrayList<Animation> anims = new ArrayList<Animation>();
-    anims.add(anim);
-    anims.add(anim1);
-    AnimationManager animMan = new AnimationManager(anims);
-    animMan.setAnimation(1);
-    obj2SpriteRenderer.setSprite(animMan.currentSprite());
-    animMan.play();
-
-    // Sprite obj2Sprite = new Sprite();
-    // obj2Sprite.setTexture(AssetPool.getTexture("assets/images/testImage.png"));
-    // obj2SpriteRenderer.setSprite(obj2Sprite);
-    obj1.addComponent(obj2SpriteRenderer);
-    obj1.addComponent(animMan);
-    animMan.play();
-    this.addGameObjectToScene(obj1);
+    this.addGameObjectToScene(player);
+    player.playAnim(0);
 
   }
 
   private void loadResources() {
     AssetPool.getShader("assets/shaders/default.glsl");
 
-    AssetPool.addSpriteSheet("assets/images/spritesheet.png",
-        new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
-          16, 16, 14, 0));
+    AssetPool.addSpriteSheet("assets/images/animations/hit-Sheet.png",
+        new Spritesheet(AssetPool.getTexture("assets/images/animations/hit-Sheet.png"),
+          64, 64, 5, 0));
 
     AssetPool.addSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png",
         new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"),
@@ -103,12 +95,18 @@ public class LevelEditorScene extends Scene {
     }
   }
 
-  // float t = 0.0f;
+  float t = 1.0f;
   @Override
   public void update(float dt) {
+    t -= dt;
     // System.out.println("FPS " + (1.0f/dt) );
     levelEditorStuff.update(dt);
 
+    if (t < 0) {
+      player.resetAnim();
+      t = 1.0f;
+      // System.out.println("Reset Animation");
+    }
 
     // if ( t <= 360.0f ) {
     //   t += 1.0f;
@@ -120,9 +118,6 @@ public class LevelEditorScene extends Scene {
       _go.update(dt);
     }
 
-    if (obj1.getComponent(AnimationManager.class).frameChanged()) {
-      obj1.getComponent(SpriteRenderer.class).setSprite(obj1.getComponent(AnimationManager.class).currentSprite());
-    };
     
 
     this.renderer.render();

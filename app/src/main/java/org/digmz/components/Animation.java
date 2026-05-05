@@ -11,19 +11,17 @@ public class Animation extends Component {
   public int imageCount;
 
   public int frame = 0;
-  public int fps = 8;
+  public int fps = 12;
   public float intervalLength = 1.0f/fps;
   public float intervalTime = 0;
   public boolean loop = true;
   public boolean frameChanged = false;
 
-
-  public Animation(Spritesheet images) {
+  public Animation(Spritesheet images, boolean loop) {
     this.images = images;
+    this.loop = loop;
     imageCount = images.size()-1;
   }
 
-
   public Sprite currentSprite() {return images.getSprite(frame);}
-
 }
