@@ -24,4 +24,6 @@ public class Animation extends Component {
   }
 
   public Sprite currentSprite() {return images.getSprite(frame);}
+
+  public int getImageCount() {return imageCount;}
 }

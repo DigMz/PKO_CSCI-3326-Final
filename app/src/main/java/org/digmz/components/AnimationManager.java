@@ -52,6 +52,7 @@ public class AnimationManager extends Component {
 
   public void setAnimation(int index) {
     currAnimation = animations.get(index);
+    currAnimation.frameChanged = true;
     animation = index;
     playing = false;
   }
@@ -72,5 +73,9 @@ public class AnimationManager extends Component {
   public int getCurrAnimIndex() {return animation;}
 
   public boolean isPlaying() {return playing;}
+
+  public int size() {
+    return animations.size();
+  }
 
 }

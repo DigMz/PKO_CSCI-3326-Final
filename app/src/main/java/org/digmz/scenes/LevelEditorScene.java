@@ -28,6 +28,7 @@ import org.joml.Vector4f;
 public class LevelEditorScene extends Scene {
 
   private CharacterObject player;
+  private CharacterObject player2;
   private Spritesheet sprites;
   SpriteRenderer obj1Sprite;
 
@@ -64,12 +65,29 @@ public class LevelEditorScene extends Scene {
             new Animation(AssetPool.getSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png"), true)
             ))),
         new ArrayList<boolean[]>(Arrays.asList(
-            new boolean[]{false, false, true, false, false}
+            new boolean[]{false, false, true, false, false},
+            new boolean[100]
             ))
         );
 
-    this.addGameObjectToScene(player);
+    // player2 = new CharacterObject(
+    //     "Player",
+    //     new Transform(new Vector2f(500, 100), new Vector2f(256, 256)),
+    //     1,
+    //     new SpriteRenderer(),
+    //     new AnimationManager(new ArrayList<Animation>(Arrays.asList(
+    //         new Animation(AssetPool.getSpriteSheet("assets/images/animations/hit-Sheet.png"), false),
+    //         new Animation(AssetPool.getSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png"), true)
+    //         ))),
+    //     new ArrayList<boolean[]>(Arrays.asList(
+    //         new boolean[]{false, false, true, false, false}
+    //         ))
+    //     );
+
     player.playAnim(0);
+
+    this.addGameObjectToScene(player);
+    // this.addGameObjectToScene(player2);
 
   }
 
@@ -95,7 +113,8 @@ public class LevelEditorScene extends Scene {
     }
   }
 
-  float t = 1.0f;
+  float tlen = 2.0f;
+  float t = tlen;
   @Override
   public void update(float dt) {
     t -= dt;
@@ -103,8 +122,8 @@ public class LevelEditorScene extends Scene {
     levelEditorStuff.update(dt);
 
     if (t < 0) {
-      player.resetAnim();
-      t = 1.0f;
+      player.playAnim(1);
+      t = tlen;
       // System.out.println("Reset Animation");
     }
 
