@@ -3,12 +3,15 @@
  */
 package org.digmz;
 
+import org.digmz.game.*;
+
 public class Main {
-    public static String getGreeting() {
-        return "Hello World!";
+    public String getGreeting() {
+        return "Hello Branch";
     }
 
     public static void main(String[] args) {
-      System.out.println(getGreeting());
+        System.out.println(new Main().getGreeting());
+        Window.get().run();
     }
 }
