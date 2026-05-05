@@ -1,4 +1,4 @@
-package nodes;
+package org.digmz.nodes;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -6,7 +6,8 @@ import java.util.ArrayList;
 public abstract class Node {
   public String id = "N/A";
   public static int frame;
-  protected ArrayList<Node> nodeMembers = new ArrayList<>();
+  private Node parent;
+  protected ArrayList<Node> children = new ArrayList<>();
 
   // Template Method Pattern for initlization and running code.
   // Only _init and _run need be defined, _init automatically called
@@ -24,7 +25,7 @@ public abstract class Node {
       try {
         Object value = field.get(this);
         if (value instanceof Node) {
-          nodeMembers.add((Node) value);
+          children.add((Node) value);
         }
       }
       catch (IllegalAccessException e) {}
@@ -33,13 +34,17 @@ public abstract class Node {
   };
   protected abstract void _init();
 
-  public final void run() {
+  public final void update() {
     // Runs every node component of the node
-    for (Node member : nodeMembers) {
-      member.run();
+    for (Node member : children) {
+      member.update();
     }
-    _run();
+    _update();
   }
-  protected abstract void _run();
+  protected abstract void _update();
+
+
+  public Node getParent() {return this.parent;}
+  public void setParent(Node parent) {this.parent = parent;}
 
 }

@@ -3,14 +3,13 @@ package org.digmz.scenes;
 import org.digmz.game.Camera;
 import org.digmz.game.GameObject;
 import org.digmz.game.Transform;
+import org.digmz.game.Window;
 import org.digmz.renderer.DebugDraw;
 import org.digmz.game.MouseListener;
 import org.digmz.game.Prefabs;
 import org.digmz.components.SpriteRenderer;
 import org.digmz.components.Spritesheet;
-import org.digmz.components.GridLines;
 import org.digmz.components.MouseControls;
-import org.digmz.components.RigidBody;
 import org.digmz.components.Sprite;
 
 import org.digmz.util.AssetPool;
@@ -27,19 +26,17 @@ public class LevelEditorScene extends Scene {
 
   GameObject levelEditorStuff = new GameObject("levelEditor", new Transform(), 0);
 
-  public LevelEditorScene() {
-  }
+  public LevelEditorScene() {}
   
   @Override
   public void init() {
     levelEditorStuff.addComponent(new MouseControls());
-    levelEditorStuff.addComponent(new GridLines());
 
     loadResources();
 
     sprites = AssetPool.getSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png");
 
-    this.camera = new Camera(new Vector2f(-250.0f, 0.0f));
+    this.camera = new Camera(new Vector2f(0.0f, 0.0f));
 
     // DebugDraw.addLine2D(new Vector2f(0, 0), new Vector2f(800, 800), new Vector3f(1, 0, 0), 10000);
 
@@ -50,21 +47,20 @@ public class LevelEditorScene extends Scene {
       return;
     }
 
-    // obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), -1);
-    // obj1Sprite = new SpriteRenderer();
-    // obj1Sprite.setColor(new Vector4f(1,0,0,1));
-    // obj1.addComponent(obj1Sprite);
-    // obj1.addComponent(new RigidBody());
-    // this.addGameObjectToScene(obj1);
-    //
-    // GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 1);
-    // SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
-    // Sprite obj2Sprite = new Sprite();
-    // obj2Sprite.setTexture(AssetPool.getTexture("assets/images/blendImage2.png"));
-    // obj2SpriteRenderer.setSprite(obj2Sprite);
-    // obj2.addComponent(obj2SpriteRenderer);
-    // this.addGameObjectToScene(obj2);
-    //
+    obj1 = new GameObject("Object 1", new Transform(new Vector2f(0, 0), new Vector2f(Window.getInitWidth(), Window.getInitHeight())), -1);
+    obj1Sprite = new SpriteRenderer();
+    obj1Sprite.setColor(new Vector4f(1,0,0,1));
+    obj1.addComponent(obj1Sprite);
+    this.addGameObjectToScene(obj1);
+
+    GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(300, 100), new Vector2f(256, 256)), 1);
+    SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
+    Sprite obj2Sprite = new Sprite();
+    obj2Sprite.setTexture(AssetPool.getTexture("assets/images/testImage.png"));
+    obj2SpriteRenderer.setSprite(obj2Sprite);
+    obj2.addComponent(obj2SpriteRenderer);
+    this.addGameObjectToScene(obj2);
+
   }
 
   private void loadResources() {

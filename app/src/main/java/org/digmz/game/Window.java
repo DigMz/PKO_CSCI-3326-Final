@@ -8,33 +8,34 @@ import org.digmz.scenes.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
-
-import java.nio.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Window {
   private int width, height;
+  private int initWidth, initHeight;
+  private float screenRatio = 0.0f;
   private String title;
   private long glfwWindow;
   private Framebuffer framebuffer;
 
-  public float r,g,b,a;
+  public float[] clearColor = {0.0f, 0.0f, 0.0f, 0.0f};
 
   private static Window window;
 
   private static Scene currentScene;
 
   private Window() {
-    this.width = 1920;
-    this.height = 1080;
-    this.title = "Mario";
-    r = 0.6f; g = 0.6f; b = 0.6f; a = 0;
+    this.width = 720;
+    this.height = 480;
+    this.initWidth = width;
+    this.initHeight = height;
+    this.screenRatio = (float) height / (float) width;
+    System.out.println(screenRatio);
+    this.title = "PunchKO";
   }
 
   public static void changeScene (int newScene) {
@@ -62,7 +63,7 @@ public class Window {
   }
 
   public static Scene getScene() {
-    return get().currentScene;
+    return currentScene;
   }
 
 	private void init() {
@@ -101,6 +102,8 @@ public class Window {
     glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
     glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
       Window.setWidth(newWidth); Window.setHeight(newHeight);
+      int[] vp = calcViewport(newWidth, newHeight, initWidth, initHeight);
+      glViewport(vp[0], vp[1], vp[2], vp[3]);
     });
 
 		// This line is critical for LWJGL's interoperation with GLFW's
@@ -113,7 +116,7 @@ public class Window {
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    this.framebuffer = new Framebuffer(1920, 1080);
+    this.framebuffer = new Framebuffer(window.getWidth(), window.getHeight());
 
     Window.changeScene(0);
 	}
@@ -133,7 +136,7 @@ public class Window {
 
       DebugDraw.beginFrame();
 
-      glClearColor(r, g, b, a);
+      glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
@@ -172,8 +175,34 @@ public class Window {
 		glfwSetErrorCallback(null).free();
   }
 
+  public static int[] calcViewport(int windowWidth, int windowHeight, 
+                                  int targetWidth, int targetHeight) {
+    float targetAspect = (float) targetWidth / targetHeight;
+    float windowAspect = (float) windowWidth / windowHeight;
+
+    int vpWidth, vpHeight, vpX, vpY;
+
+    if (windowAspect >= targetAspect) {
+        // Window is wider than target — pillarbox (bars on sides)
+        vpHeight = windowHeight;
+        vpWidth  = (int)(windowHeight * targetAspect);
+    } else {
+        // Window is taller than target — letterbox (bars on top/bottom)
+        vpWidth  = windowWidth;
+        vpHeight = (int)(windowWidth / targetAspect);
+    }
+
+    vpX = (windowWidth  - vpWidth)  / 2;
+    vpY = (windowHeight - vpHeight) / 2;
+
+    return new int[]{ vpX, vpY, vpWidth, vpHeight };
+  }
+
   public static int getWidth() { return get().width; }
   public static int getHeight() { return get().height; }
+  public static int getInitWidth() { return get().initWidth; }
+  public static int getInitHeight() { return get().initHeight; }
+  public static float getRatio() { return get().screenRatio; }
   public static void setWidth(int width) { get().width = width; }
   public static void setHeight(int height) { get().height = height; }
 }
