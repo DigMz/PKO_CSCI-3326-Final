@@ -22,7 +22,6 @@ public class Window {
   private int width, height;
   private String title;
   private long glfwWindow;
-  private ImGuiLayer imGuiLayer;
   private Framebuffer framebuffer;
 
   public float r,g,b,a;
@@ -50,7 +49,6 @@ public class Window {
         assert false : "Unknown Scene '" + newScene + "'";
     }
 
-    currentScene.load();
     currentScene.init();
     currentScene.start();
   }
@@ -115,9 +113,6 @@ public class Window {
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    this.imGuiLayer = new ImGuiLayer(glfwWindow);
-    this.imGuiLayer.initImGui();
-
     this.framebuffer = new Framebuffer(1920, 1080);
 
     Window.changeScene(0);
@@ -153,7 +148,6 @@ public class Window {
       MouseListener.endFrame();
       KeyListener.endFrame();
 
-      this.imGuiLayer.update(dt, currentScene);
 			glfwSwapBuffers(glfwWindow); // swap the color buffers
 
       endTime = Time.getTime();
@@ -161,7 +155,6 @@ public class Window {
       beginTime = endTime;
 		}
 
-    currentScene.save();
 	}
 
   public void run() {

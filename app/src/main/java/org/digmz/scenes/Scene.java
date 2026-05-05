@@ -10,15 +10,8 @@ import java.util.List;
 
 import org.digmz.game.Camera;
 import org.digmz.game.GameObject;
-import org.digmz.game.GameObjectDeserializer;
 import org.digmz.renderer.Renderer;
 import org.digmz.components.Component;
-import org.digmz.components.ComponentDeserializer;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import imgui.ImGui;
 
 public abstract class Scene {
   public Scene() {}
@@ -54,75 +47,6 @@ public abstract class Scene {
 
   public Camera camera() {
     return this.camera;
-  }
-
-  public void sceneImgui() {
-    if (activeGameObject != null) {
-      ImGui.begin("Inspector");
-      activeGameObject.imgui();
-      ImGui.end();
-    }
-
-    imgui();
-  }
-
-  public void imgui() {
-
-  }
-
-  public void save() {
-    Gson gson = new GsonBuilder()
-      .setPrettyPrinting()
-      .registerTypeAdapter(Component.class, new ComponentDeserializer())
-      .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
-      .create();
-
-    try {
-      FileWriter writer = new FileWriter("level.txt");
-      writer.write(gson.toJson(this.gameObjects));
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void load() {
-    Gson gson = new GsonBuilder()
-      .setPrettyPrinting()
-      .registerTypeAdapter(Component.class, new ComponentDeserializer())
-      .registerTypeAdapter(GameObject.class, new GameObjectDeserializer())
-      .create();
-    String inFile = "";
-    try {
-      inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    if (!inFile.equals("")) {
-      int maxGoID = -1;
-      int maxCompID = -1;
-      GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-      for (int i = 0; i < objs.length; i++) {
-        addGameObjectToScene(objs[i]);
-
-        for (Component c : objs[i].getAllComponents()) {
-          if (c.getUid() > maxCompID) {
-            maxCompID = c.getUid();
-          }
-        }
-
-        if (objs[i].getUid() > maxGoID) {
-          maxGoID = objs[i].getUid();
-        }
-      }
-
-      maxGoID++; maxCompID++;
-      GameObject.init(maxGoID);
-      Component.init(maxCompID);
-
-      this.levelLoaded = true;
-    }
   }
 
 }
