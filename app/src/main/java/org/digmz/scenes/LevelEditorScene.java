@@ -9,6 +9,11 @@ import org.digmz.game.MouseListener;
 import org.digmz.game.Prefabs;
 import org.digmz.components.SpriteRenderer;
 import org.digmz.components.Spritesheet;
+
+import java.util.ArrayList;
+
+import org.digmz.components.Animation;
+import org.digmz.components.AnimationManager;
 import org.digmz.components.MouseControls;
 import org.digmz.components.Sprite;
 
@@ -47,24 +52,41 @@ public class LevelEditorScene extends Scene {
       return;
     }
 
-    obj1 = new GameObject("Object 1", new Transform(new Vector2f(0, 0), new Vector2f(Window.getInitWidth(), Window.getInitHeight())), -1);
-    obj1Sprite = new SpriteRenderer();
-    obj1Sprite.setColor(new Vector4f(1,0,0,1));
-    obj1.addComponent(obj1Sprite);
-    this.addGameObjectToScene(obj1);
+    // obj1 = new GameObject("Object 1", new Transform(new Vector2f(0, 0), new Vector2f(Window.getInitWidth(), Window.getInitHeight())), -1);
+    // obj1Sprite = new SpriteRenderer();
+    // obj1Sprite.setColor(new Vector4f(1,0,0,1));
+    // obj1.addComponent(obj1Sprite);
+    // this.addGameObjectToScene(obj1);
 
-    GameObject obj2 = new GameObject("Object 2", new Transform(new Vector2f(300, 100), new Vector2f(256, 256)), 1);
+    obj1 = new GameObject("Object 2", new Transform(new Vector2f(300, 100), new Vector2f(256, 256)), 1);
     SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
-    Sprite obj2Sprite = new Sprite();
-    obj2Sprite.setTexture(AssetPool.getTexture("assets/images/testImage.png"));
-    obj2SpriteRenderer.setSprite(obj2Sprite);
-    obj2.addComponent(obj2SpriteRenderer);
-    this.addGameObjectToScene(obj2);
+    Spritesheet obj2sprites = AssetPool.getSpriteSheet("assets/images/spritesheet.png");
+    Animation anim = new Animation(obj2sprites);
+    Animation anim1 = new Animation(sprites);
+    ArrayList<Animation> anims = new ArrayList<Animation>();
+    anims.add(anim);
+    anims.add(anim1);
+    AnimationManager animMan = new AnimationManager(anims);
+    animMan.setAnimation(1);
+    obj2SpriteRenderer.setSprite(animMan.currentSprite());
+    animMan.play();
+
+    // Sprite obj2Sprite = new Sprite();
+    // obj2Sprite.setTexture(AssetPool.getTexture("assets/images/testImage.png"));
+    // obj2SpriteRenderer.setSprite(obj2Sprite);
+    obj1.addComponent(obj2SpriteRenderer);
+    obj1.addComponent(animMan);
+    animMan.play();
+    this.addGameObjectToScene(obj1);
 
   }
 
   private void loadResources() {
     AssetPool.getShader("assets/shaders/default.glsl");
+
+    AssetPool.addSpriteSheet("assets/images/spritesheet.png",
+        new Spritesheet(AssetPool.getTexture("assets/images/spritesheet.png"),
+          16, 16, 14, 0));
 
     AssetPool.addSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png",
         new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"),
@@ -87,6 +109,7 @@ public class LevelEditorScene extends Scene {
     // System.out.println("FPS " + (1.0f/dt) );
     levelEditorStuff.update(dt);
 
+
     // if ( t <= 360.0f ) {
     //   t += 1.0f;
     // } else { t = 0.0f; }
@@ -96,6 +119,11 @@ public class LevelEditorScene extends Scene {
     for (GameObject _go : this.gameObjects) {
       _go.update(dt);
     }
+
+    if (obj1.getComponent(AnimationManager.class).frameChanged()) {
+      obj1.getComponent(SpriteRenderer.class).setSprite(obj1.getComponent(AnimationManager.class).currentSprite());
+    };
+    
 
     this.renderer.render();
   }
