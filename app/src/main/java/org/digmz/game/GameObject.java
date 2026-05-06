@@ -77,4 +77,10 @@ public class GameObject {
   public List<Component> getAllComponents() {
     return this.components;
   }
+
+  public Transform getTransform() {return transform;}
+
+  public void updateTransform(Transform transform) {
+    transform.copyTo(this.transform);
+  }
 }

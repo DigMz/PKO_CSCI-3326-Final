@@ -21,6 +21,7 @@ public class Window {
   private String title;
   private long glfwWindow;
   private Framebuffer framebuffer;
+  public boolean winner = false; 
 
   public float[] clearColor = {0.0f, 0.0f, 0.0f, 0.0f};
 
@@ -116,8 +117,6 @@ public class Window {
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    this.framebuffer = new Framebuffer(window.getWidth(), window.getHeight());
-
     Window.changeScene(0);
 	}
 
@@ -142,11 +141,10 @@ public class Window {
 
       // this.framebuffer.bind();
       if (dt >= 0.0f) {
-        DebugDraw.draw();
-
         currentScene.update(dt);
+        DebugDraw.draw();
       }
-      this.framebuffer.unbind();
+      // this.framebuffer.unbind();
 
       MouseListener.endFrame();
       KeyListener.endFrame();

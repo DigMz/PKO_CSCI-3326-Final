@@ -18,7 +18,7 @@ public class CharacterObject extends GameObject {
 
   private boolean hitting = false;
   private boolean prevHit = false;
-  private boolean justHit = false;
+  public boolean justHit = false;
 
   public CharacterObject(
       String name, Transform transform, int zIndex, SpriteRenderer sprRend,
@@ -61,11 +61,9 @@ public class CharacterObject extends GameObject {
       justHit = true;
     }
 
-    if (justHit) {
-      System.out.println("Hit Registered");
-
-      justHit = false;
-    }
+    // if (justHit) {
+    //   justHit = false;
+    // }
 
     prevHit = hitting;
   }
@@ -91,8 +89,9 @@ public class CharacterObject extends GameObject {
     this.animan.resetCurrAnim();
   }
 
-  public boolean isHitting() {
-    return hitting;
+  public boolean blockCheck() {
+    // System.out.println(animan.getCurrAnim().frame);
+    return animan.getCurrAnimIndex() == 1 && (animan.getCurrAnim().frame == 1 || animan.getCurrAnim().frame == 2);
   }
 
   public boolean isActionable() {
