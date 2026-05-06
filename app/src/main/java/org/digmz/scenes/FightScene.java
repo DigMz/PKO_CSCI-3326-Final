@@ -7,7 +7,6 @@ import org.digmz.game.Transform;
 import org.digmz.game.Window;
 import org.digmz.renderer.DebugDraw;
 import org.digmz.game.MouseListener;
-import org.digmz.game.Prefabs;
 import org.digmz.components.SpriteRenderer;
 import org.digmz.components.Spritesheet;
 
@@ -18,7 +17,6 @@ import java.util.Arrays;
 
 import org.digmz.components.Animation;
 import org.digmz.components.AnimationManager;
-import org.digmz.components.MouseControls;
 import org.digmz.components.Sprite;
 
 import org.digmz.game.KeyListener;
@@ -29,7 +27,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class LevelEditorScene extends Scene {
+public class FightScene extends Scene {
 
   private CharacterObject player1;
   private CharacterObject player2;
@@ -40,11 +38,10 @@ public class LevelEditorScene extends Scene {
 
   GameObject levelEditorStuff = new GameObject("levelEditor", new Transform(), 0);
 
-  public LevelEditorScene() {}
+  public FightScene() {}
   
   @Override
   public void init() {
-    levelEditorStuff.addComponent(new MouseControls());
 
     loadResources();
 

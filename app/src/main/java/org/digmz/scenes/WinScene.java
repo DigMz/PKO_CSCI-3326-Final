@@ -12,7 +12,6 @@ import org.digmz.game.KeyListener;
 import org.digmz.game.Transform;
 import org.digmz.renderer.DebugDraw;
 import org.digmz.game.MouseListener;
-import org.digmz.game.Prefabs;
 import org.digmz.components.SpriteRenderer;
 import org.digmz.components.Spritesheet;
 
@@ -21,7 +20,6 @@ import java.util.Arrays;
 
 import org.digmz.components.Animation;
 import org.digmz.components.AnimationManager;
-import org.digmz.components.MouseControls;
 import org.digmz.components.Sprite;
 
 import org.digmz.util.AssetPool;
@@ -29,8 +27,8 @@ import org.joml.Math;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class LevelScene extends Scene{
-  public LevelScene() {
+public class WinScene extends Scene{
+  public WinScene() {
     System.out.println("Inside LevelScene");
     // if (Window.get().winner) {
     //   Window.get().clearColor = new float[]{1.0f, 0f, 0f, 0.0f};

@@ -2,7 +2,6 @@ package org.digmz.game;
 
 import org.digmz.util.Time;
 import org.digmz.renderer.DebugDraw;
-import org.digmz.renderer.Framebuffer;
 import org.digmz.scenes.*;
 
 import org.lwjgl.*;
@@ -20,7 +19,6 @@ public class Window {
   private float screenRatio = 0.0f;
   private String title;
   private long glfwWindow;
-  private Framebuffer framebuffer;
   public boolean winner = false; 
 
   public float[] clearColor = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -42,10 +40,10 @@ public class Window {
   public static void changeScene (int newScene) {
     switch (newScene) {
       case 0:
-        currentScene = new LevelEditorScene();
+        currentScene = new FightScene();
         break;
       case 1:
-        currentScene = new LevelScene();
+        currentScene = new WinScene();
         break;
       default:
         assert false : "Unknown Scene '" + newScene + "'";
