@@ -80,7 +80,11 @@ public class CharacterObject extends GameObject {
 
   public void playAnim(int index) {
     this.setAnim(index);
+    animan.resetCurrAnim();
     animan.play();
+  }
+
+  public void bufferAnim(int index) {
   }
 
   public void resetAnim() {
@@ -90,5 +94,10 @@ public class CharacterObject extends GameObject {
   public boolean isHitting() {
     return hitting;
   }
+
+  public boolean isActionable() {
+    return !animan.isPlaying();
+  }
+
  
 }

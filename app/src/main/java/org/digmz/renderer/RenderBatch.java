@@ -113,6 +113,14 @@ public class RenderBatch implements Comparable<RenderBatch>{
     }
   }
 
+  public void addTexture(Texture texture) {
+    if (texture != null) {
+      if (!textures.contains(texture)) {
+        textures.add(texture);
+      }
+    }
+  }
+
   public void render() {
     boolean rebufferData = false;
     for (int i = 0; i < numSprites; i++) {

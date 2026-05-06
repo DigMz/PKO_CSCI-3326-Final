@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.digmz.components.AnimationManager;
 import org.digmz.components.SpriteRenderer;
+import org.digmz.game.CharacterObject;
 import org.digmz.game.GameObject;
 
 public class Renderer {
@@ -21,6 +23,17 @@ public class Renderer {
       add(spr);
     }
   } 
+
+  public void add(CharacterObject co) {
+    SpriteRenderer spr = co.getComponent(SpriteRenderer.class);
+    RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, co.zIndex());
+    newBatch.start();
+    batches.add(newBatch);
+    newBatch.addSprite(spr);
+    for (Texture texture : co.getComponent(AnimationManager.class).getTextures()) {
+      newBatch.addTexture(texture);
+    }
+  }
 
   private void add(SpriteRenderer sprite) {
     boolean added = false;

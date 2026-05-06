@@ -1,5 +1,7 @@
 package org.digmz.components;
 
+import org.digmz.renderer.Texture;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ public class Animation extends Component {
   public int imageCount;
 
   public int frame = 0;
-  public int fps = 12;
+  public int fps = 16;
   public float intervalLength = 1.0f/fps;
   public float intervalTime = 0;
   public boolean loop = true;
@@ -26,4 +28,8 @@ public class Animation extends Component {
   public Sprite currentSprite() {return images.getSprite(frame);}
 
   public int getImageCount() {return imageCount;}
+
+  public Texture getTexture() {
+    return images.getSprite(0).getTexture();
+  }
 }

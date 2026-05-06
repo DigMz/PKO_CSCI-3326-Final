@@ -1,5 +1,7 @@
 package org.digmz.components;
 
+import org.digmz.renderer.Texture;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ public class AnimationManager extends Component {
         }
         else {
           currAnimation.frame = currAnimation.imageCount-1;
+          playing = false;
         }
       }
       currAnimation.frame++;
@@ -76,6 +79,14 @@ public class AnimationManager extends Component {
 
   public int size() {
     return animations.size();
+  }
+
+  public ArrayList<Texture> getTextures() {
+    ArrayList<Texture> textures = new ArrayList<Texture>();
+    for (Animation anim : animations) {
+      textures.add(anim.getTexture());
+    }
+    return textures;
   }
 
 }

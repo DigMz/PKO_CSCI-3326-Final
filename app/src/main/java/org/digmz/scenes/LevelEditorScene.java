@@ -1,8 +1,11 @@
 package org.digmz.scenes;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 import org.digmz.game.Camera;
 import org.digmz.game.CharacterObject;
 import org.digmz.game.GameObject;
+import org.digmz.game.KeyListener;
 import org.digmz.game.Transform;
 import org.digmz.game.Window;
 import org.digmz.renderer.DebugDraw;
@@ -57,38 +60,47 @@ public class LevelEditorScene extends Scene {
 
     player = new CharacterObject(
         "Player",
-        new Transform(new Vector2f(300, 100), new Vector2f(256, 256)),
+        new Transform(new Vector2f(0, 100), new Vector2f(256, 256)),
         1,
         new SpriteRenderer(),
         new AnimationManager(new ArrayList<Animation>(Arrays.asList(
             new Animation(AssetPool.getSpriteSheet("assets/images/animations/hit-Sheet.png"), false),
-            new Animation(AssetPool.getSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png"), true)
+            new Animation(AssetPool.getSpriteSheet("assets/images/animations/block-Sheet.png"), false)
             ))),
         new ArrayList<boolean[]>(Arrays.asList(
             new boolean[]{false, false, true, false, false},
-            new boolean[100]
+            new boolean[4]
             ))
         );
+    player.getComponent(SpriteRenderer.class).setColor(new Vector4f(1, 0.5f, 0.5f, 1));
 
-    // player2 = new CharacterObject(
-    //     "Player",
-    //     new Transform(new Vector2f(500, 100), new Vector2f(256, 256)),
-    //     1,
-    //     new SpriteRenderer(),
-    //     new AnimationManager(new ArrayList<Animation>(Arrays.asList(
-    //         new Animation(AssetPool.getSpriteSheet("assets/images/animations/hit-Sheet.png"), false),
-    //         new Animation(AssetPool.getSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png"), true)
-    //         ))),
-    //     new ArrayList<boolean[]>(Arrays.asList(
-    //         new boolean[]{false, false, true, false, false}
-    //         ))
-    //     );
+    player2 = new CharacterObject(
+        "Player",
+        new Transform(new Vector2f(500, 100), new Vector2f(-256, 256)),
+        1,
+        new SpriteRenderer(),
+        new AnimationManager(new ArrayList<Animation>(Arrays.asList(
+            new Animation(AssetPool.getSpriteSheet("assets/images/animations/hit-Sheet.png"), false),
+            new Animation(AssetPool.getSpriteSheet("assets/images/animations/block-Sheet.png"), false)
+            ))),
+        new ArrayList<boolean[]>(Arrays.asList(
+            new boolean[]{false, false, true, false, false},
+            new boolean[4]
+            ))
+        );
+    player2.getComponent(SpriteRenderer.class).setColor(new Vector4f(0.5f, 0.5f, 1, 1));
 
-    player.playAnim(0);
+    GameObject obj1 = new GameObject("box", new Transform(new Vector2f(0,0), new Vector2f(720, 480)), -1);
+    SpriteRenderer obj1Sprite = new SpriteRenderer();
+    obj1Sprite.setColor(new Vector4f(0.5f, 0.5f, 0.5f, 1));
+    obj1.addComponent(obj1Sprite);
+    this.addGameObjectToScene(obj1);
 
-    this.addGameObjectToScene(player);
+
+    // this.addGameObjectToScene(player);
     // this.addGameObjectToScene(player2);
-
+    this.addCharacterObjectToScene(player);
+    this.addCharacterObjectToScene(player2);
   }
 
   private void loadResources() {
@@ -97,6 +109,10 @@ public class LevelEditorScene extends Scene {
     AssetPool.addSpriteSheet("assets/images/animations/hit-Sheet.png",
         new Spritesheet(AssetPool.getTexture("assets/images/animations/hit-Sheet.png"),
           64, 64, 5, 0));
+
+    AssetPool.addSpriteSheet("assets/images/animations/block-Sheet.png",
+        new Spritesheet(AssetPool.getTexture("assets/images/animations/block-Sheet.png"),
+          64, 64, 4, 0));
 
     AssetPool.addSpriteSheet("assets/images/spritesheets/decorationsAndBlocks.png",
         new Spritesheet(AssetPool.getTexture("assets/images/spritesheets/decorationsAndBlocks.png"),
@@ -113,19 +129,24 @@ public class LevelEditorScene extends Scene {
     }
   }
 
-  float tlen = 2.0f;
-  float t = tlen;
   @Override
   public void update(float dt) {
-    t -= dt;
     // System.out.println("FPS " + (1.0f/dt) );
     levelEditorStuff.update(dt);
 
-    if (t < 0) {
-      player.playAnim(1);
-      t = tlen;
-      // System.out.println("Reset Animation");
+    if (KeyListener.isKeyJustPressed(GLFW_KEY_1) && player.isActionable()) {
+      player.playAnim(0);
     }
+    else if (KeyListener.isKeyJustPressed(GLFW_KEY_2) && player.isActionable()) {
+      player.playAnim(1);
+    }
+    if (KeyListener.isKeyJustPressed(GLFW_KEY_3) && player2.isActionable()) {
+      player2.playAnim(0);
+    }
+    else if (KeyListener.isKeyJustPressed(GLFW_KEY_4) && player2.isActionable()) {
+      player2.playAnim(1);
+    }
+
 
     // if ( t <= 360.0f ) {
     //   t += 1.0f;
@@ -136,8 +157,6 @@ public class LevelEditorScene extends Scene {
     for (GameObject _go : this.gameObjects) {
       _go.update(dt);
     }
-
-    
 
     this.renderer.render();
   }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.digmz.game.Camera;
+import org.digmz.game.CharacterObject;
 import org.digmz.game.GameObject;
 import org.digmz.renderer.Renderer;
 import org.digmz.components.Component;
@@ -40,6 +41,16 @@ public abstract class Scene {
       gameObjects.add(go);
       go.start();
       this.renderer.add(go);
+    }
+  }
+
+  public void addCharacterObjectToScene(CharacterObject co) {
+    if (!isRunning) {
+      gameObjects.add(co);
+    } else {
+      gameObjects.add(co);
+      co.start();
+      this.renderer.add(co);
     }
   }
 
